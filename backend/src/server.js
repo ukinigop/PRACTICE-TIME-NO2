@@ -3,6 +3,7 @@ require("dotenv").config();
 const dns = require("node:dns");
 const express = require("express");
 const mongoose = require("mongoose");
+const currentApplicantRouter = require("./routes/currentApplicant");
 const loginApplicantRouter = require("./routes/loginApplicant");
 const registerApplicantRouter = require("./routes/registerApplicant");
 
@@ -25,6 +26,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/applicants/register", registerApplicantRouter);
 app.use("/api/applicants/login", loginApplicantRouter);
+app.use("/api/applicants/me", currentApplicantRouter);
 
 app.use((error, req, res, next) => {
   if (error.type === "entity.parse.failed") {
