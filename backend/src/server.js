@@ -3,6 +3,7 @@ require("dotenv").config();
 const dns = require("node:dns");
 const express = require("express");
 const mongoose = require("mongoose");
+const registerApplicantRouter = require("./routes/registerApplicant");
 
 const dnsServers = (process.env.DNS_SERVERS || "")
   .split(",")
@@ -20,6 +21,8 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Job Application System API is running");
 });
+
+app.use("/api/applicants/register", registerApplicantRouter);
 
 app.use((error, req, res, next) => {
   if (error.type === "entity.parse.failed") {
