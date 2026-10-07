@@ -3,6 +3,7 @@ require("dotenv").config();
 const dns = require("node:dns");
 const express = require("express");
 const mongoose = require("mongoose");
+const loginApplicantRouter = require("./routes/loginApplicant");
 const registerApplicantRouter = require("./routes/registerApplicant");
 
 const dnsServers = (process.env.DNS_SERVERS || "")
@@ -23,6 +24,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/applicants/register", registerApplicantRouter);
+app.use("/api/applicants/login", loginApplicantRouter);
 
 app.use((error, req, res, next) => {
   if (error.type === "entity.parse.failed") {
@@ -36,6 +38,9 @@ app.use((error, req, res, next) => {
 async function start() {
   if (!process.env.MONGO_URI) {
     throw new Error("MONGO_URI is missing. Set it in backend/.env.");
+  }
+  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+    throw new Error("JWT_SECRET must be set to a secret of at least 32 characters.");
   }
   await mongoose.connect(process.env.MONGO_URI);
   console.log("Connected to MongoDB");
