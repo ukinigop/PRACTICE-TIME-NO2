@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Manage your team's open roles with Applyly." />
+    <title>Job listings | Applyly</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "DM Sans", "Segoe UI", sans-serif;
+        color: #23332e;
+        background: #f7f8f6;
+        font-synthesis: none;
+        text-rendering: optimizeLegibility;
+        --green: #22594b;
+        --green-dark: #19483d;
+        --ink: #23332e;
+        --muted: #89938e;
+        --line: #e9ece8;
+      }
+
+      * { box-sizing: border-box; }
+      body { min-width: 360px; min-height: 100vh; margin: 0; }
+      button, input { font: inherit; }
+      button { cursor: pointer; }
+      .app-shell { min-height: 100vh; }
+      .sidebar {
+        position: fixed; inset: 0 auto 0 0; z-index: 2; display: flex; width: 246px;
+        flex-direction: column; padding: 25px 17px 15px; border-right: 1px solid var(--line);
+        background: #fff;
+      }
+      .brand { display: flex; align-items: center; gap: 10px; margin: 0 0 29px 5px; color: var(--ink); font-size: 20px; font-weight: 750; letter-spacing: -.7px; text-decoration: none; }
+      .brand-mark { display: grid; width: 33px; height: 33px; place-items: center; border-radius: 10px; color: #fff; background: var(--green); }
+      .workspace-switcher { display: flex; align-items: center; gap: 10px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+      .workspace-avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 9px; color: #744837; background: #f1e5d7; font-family: Georgia, serif; font-size: 18px; }
+      .workspace-copy, .profile-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 3px; }
+      .workspace-copy strong, .profile-copy strong { font-size: 12px; }
+      .workspace-copy span, .profile-copy small { color: var(--muted); font-size: 10px; }
+      .workspace-switcher > svg { color: #8a948f; }
+      .nav-label { margin: 31px 8px 10px; color: #9aa39e; font-size: 9px; font-weight: 700; letter-spacing: 1.1px; }
+      .tools-label { margin-top: 31px; }
+      nav { display: grid; gap: 4px; }
+      .nav-item { display: flex; min-height: 39px; align-items: center; gap: 11px; padding: 0 10px; border-radius: 8px; color: #6d7973; font-size: 12px; font-weight: 550; text-decoration: none; }
+      .nav-item:hover { color: var(--green); background: #f6f8f6; }
+      .nav-item.selected { color: var(--green-dark); background: #eaf2ee; font-weight: 700; }
+      .nav-count { margin-left: auto; color: #7b8982; font-size: 10px; }
+      .sidebar-bottom { margin-top: auto; }
+      .plan-card { padding: 14px; border: 1px solid #e9eee9; border-radius: 11px; background: #f8faf8; }
+      .plan-icon { display: grid; width: 26px; height: 26px; margin-bottom: 10px; place-items: center; border-radius: 8px; color: #a65c3b; background: #faeee6; font-size: 16px; }
+      .plan-card > strong { font-size: 11px; }
+      .plan-card p { margin: 6px 0 11px; color: #89938e; font-size: 10px; line-height: 1.5; }
+      .plan-card button { padding: 0; border: 0; color: var(--green); background: transparent; font-size: 10px; font-weight: 700; }
+      .plan-card button span { margin-left: 4px; font-size: 14px; }
+      .profile-button { display: flex; width: 100%; align-items: center; gap: 9px; margin-top: 13px; padding: 10px 3px 2px; border: 0; border-top: 1px solid var(--line); color: var(--ink); background: transparent; text-align: left; }
+      .profile-avatar, .topbar-avatar { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border-radius: 50%; color: #6e4b43; background: #f0ded6; font-size: 10px; font-weight: 700; }
+      .profile-button > svg { color: #87918b; }
+
+      .main-content { min-height: 100vh; margin-left: 246px; }
+      .topbar { display: flex; height: 65px; align-items: center; justify-content: space-between; padding: 0 clamp(25px, 4vw, 58px); border-bottom: 1px solid var(--line); background: #fff; }
+      .breadcrumbs, .topbar-actions { display: flex; align-items: center; }
+      .breadcrumbs { gap: 9px; color: #939c97; font-size: 11px; }
+      .breadcrumbs strong { color: #394740; font-weight: 650; }
+      .topbar-actions { gap: 17px; }
+      .icon-button { position: relative; display: grid; width: 34px; height: 34px; place-items: center; border: 0; border-radius: 9px; color: #67746d; background: transparent; }
+      .icon-button:hover { background: #f4f6f4; }
+      .notification-button > span { position: absolute; top: 7px; right: 7px; width: 6px; height: 6px; border: 1px solid #fff; border-radius: 50%; background: #d97553; }
+      .topbar-avatar { width: 31px; height: 31px; }
+      .content-wrap { width: min(1230px, 100%); margin: 0 auto; padding: 36px clamp(25px, 4vw, 58px) 24px; }
+      .page-heading { display: flex; align-items: center; justify-content: space-between; gap: 18px; margin-bottom: 25px; }
+      .heading-overline { display: flex; align-items: center; gap: 7px; margin-bottom: 9px; color: #8b9891; font-size: 9px; font-weight: 700; letter-spacing: 1.25px; }
+      .heading-dot { width: 6px; height: 6px; border-radius: 50%; background: #d27d58; }
+      h1 { margin: 0; color: #273831; font-family: Georgia, "Times New Roman", serif; font-size: clamp(30px, 3vw, 37px); font-weight: 400; letter-spacing: -1.2px; }
+      .page-heading p { margin: 8px 0 0; color: #87918c; font-size: 12px; }
+      .primary-button { display: flex; height: 39px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 0; border-radius: 8px; color: #fff; background: var(--green); font-size: 11px; font-weight: 650; box-shadow: 0 3px 7px #22594b20; }
+      .primary-button:hover { background: var(--green-dark); }
+      .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
+      .stat-card { min-height: 118px; padding: 16px 18px 13px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
+      .stat-top { display: flex; align-items: center; justify-content: space-between; color: #79857e; font-size: 10px; font-weight: 550; }
+      .stat-icon { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 8px; }
+      .stat-icon.green { color: #35705e; background: #e8f2ec; }
+      .stat-icon.peach { color: #b76a4e; background: #f9eee8; }
+      .stat-icon.lilac { color: #7664a0; background: #f0edf8; }
+      .stat-value { display: flex; align-items: baseline; gap: 10px; margin-top: 7px; color: #283831; font-size: 25px; font-weight: 700; letter-spacing: -.8px; }
+      .stat-change { color: #40826a; font-size: 9px; font-weight: 650; letter-spacing: 0; }
+      .stat-foot { margin-top: 4px; color: #a0a8a3; font-size: 9px; }
+
+      .jobs-card { overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
+      .jobs-card-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 20px 16px; }
+      .jobs-card-header h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: #2a3932; font-size: 13px; font-weight: 700; }
+      .total-badge { padding: 3px 7px; border-radius: 20px; color: #68766e; background: #f0f3f0; font-size: 9px; }
+      .jobs-card-header p { margin: 6px 0 0; color: #97a09b; font-size: 10px; }
+      .filter-button { display: flex; align-items: center; gap: 7px; padding: 7px 10px; border: 1px solid #e8ece8; border-radius: 7px; color: #67746c; background: #fff; font-size: 10px; }
+      .filter-button:hover { background: #f8faf8; }
+      .filter-glyph { font-size: 16px; line-height: 10px; }
+      .table-controls { display: flex; min-height: 50px; align-items: stretch; justify-content: space-between; gap: 15px; padding: 0 20px; border-top: 1px solid #f0f2ef; border-bottom: 1px solid #edf0ed; }
+      .status-tabs { display: flex; align-items: stretch; gap: 19px; }
+      .status-tab { position: relative; display: flex; align-items: center; gap: 6px; padding: 0 1px; border: 0; color: #8b9690; background: transparent; font-size: 10px; white-space: nowrap; }
+      .status-tab > span { padding: 2px 5px; border-radius: 10px; color: #89938e; background: #f2f4f2; font-size: 8px; }
+      .status-tab.active { color: var(--green); font-weight: 700; }
+      .status-tab.active::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: var(--green); content: ""; }
+      .status-tab.active > span { color: var(--green); background: #e8f2ec; }
+      .search-box { display: flex; width: 205px; flex: 0 1 205px; align-items: center; gap: 7px; margin: 8px 0; padding: 0 8px; border: 1px solid #e9ede9; border-radius: 7px; color: #9ba49e; }
+      .search-box:focus-within { border-color: #8eb2a1; box-shadow: 0 0 0 2px #22594b12; }
+      .search-box input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 9px; }
+      .search-box input::placeholder { color: #a1aaa5; }
+      .search-box kbd { flex: 0 0 auto; padding: 3px 4px; border: 1px solid #edf0ed; border-radius: 4px; color: #a0a8a2; background: #f9faf9; font-family: inherit; font-size: 8px; }
+      .table-scroll { overflow-x: auto; }
+      table { width: 100%; border-collapse: collapse; text-align: left; }
+      thead { background: #fbfcfb; }
+      th { height: 37px; padding: 0 12px; color: #9ba49e; font-size: 8px; font-weight: 700; letter-spacing: .65px; white-space: nowrap; }
+      th:first-child, td:first-child { padding-left: 20px; }
+      th:last-child, td:last-child { padding-right: 17px; }
+      td { height: 64px; padding: 8px 12px; border-top: 1px solid #f0f2ef; color: #66736c; font-size: 10px; white-space: nowrap; }
+      .position-cell { display: flex; min-width: 205px; align-items: center; gap: 10px; }
+      .team-icon { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border-radius: 9px; font-size: 9px; font-weight: 750; }
+      .team-icon.lilac { color: #695a97; background: #f0edf8; }
+      .team-icon.blue { color: #4e7097; background: #eaf1f8; }
+      .team-icon.peach { color: #ad684e; background: #f9eee8; }
+      .team-icon.mint { color: #3b7964; background: #e9f3ed; }
+      .team-icon.yellow { color: #92743e; background: #f7f1e2; }
+      .team-icon.pink { color: #a05d79; background: #f7edf1; }
+      .position-copy { display: flex; flex-direction: column; gap: 5px; }
+      .position-copy strong { color: #35443d; font-size: 10px; font-weight: 650; }
+      .position-copy small { display: flex; align-items: center; gap: 6px; color: #99a19c; font-size: 9px; }
+      .position-copy small i { width: 3px; height: 3px; border-radius: 50%; background: #b2bab5; }
+      .location-cell { display: flex; align-items: center; gap: 6px; }
+      .location-pin { color: #a2aca5; font-size: 15px; }
+      .applicant-count { color: #46544d; font-weight: 650; }
+      .applicant-label { color: #a0a8a3; font-size: 9px; }
+      .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 20px; font-size: 9px; font-weight: 600; }
+      .status-pill i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+      .status-pill.active { color: #3f8068; background: #eaf4ee; }
+      .status-pill.paused { color: #9b7b38; background: #f8f3e5; }
+      .status-pill.draft { color: #79848d; background: #f0f2f3; }
+      .status-pill.closed { color: #9b6861; background: #f7eeec; }
+      .date-cell { color: #87928b; font-size: 9px; }
+      .row-action { display: grid; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 6px; color: #939d96; background: transparent; }
+      .row-action:hover { color: var(--green); background: #f2f6f3; }
+      .empty-state { height: 120px; text-align: center; }
+      .empty-state span, .empty-state small { display: block; }
+      .empty-state span { margin-bottom: 5px; color: #48574f; font-weight: 650; }
+      .empty-state small { color: #939d96; }
+      .table-footer { display: flex; min-height: 54px; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 17px 8px 20px; border-top: 1px solid #edf0ed; color: #98a19b; font-size: 9px; }
+      .table-footer strong { color: #5e6b64; font-weight: 650; }
+      .pagination { display: flex; align-items: center; gap: 4px; }
+      .page-button, .page-number { min-width: 27px; height: 27px; border: 1px solid #e9ede9; border-radius: 6px; color: #707c74; background: #fff; font-size: 9px; }
+      .page-button { padding: 0 8px; }
+      .page-button:disabled { color: #b4bcb7; cursor: default; }
+      .page-number { min-width: 27px; }
+      .page-number.current { border-color: #dfeae3; color: var(--green); background: #eaf2ed; font-weight: 700; }
+      .page-note { margin: 15px 0 0; color: #a3aba5; font-size: 9px; text-align: center; }
+      .page-note span { margin-left: 3px; color: #d17a56; }
+      .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+
+      @media (min-width: 1500px) {
+        .content-wrap { padding-top: 44px; }
+        td { height: 69px; }
+      }
+      @media (max-width: 1050px) {
+        .sidebar { width: 210px; padding-right: 13px; padding-left: 13px; }
+        .main-content { margin-left: 210px; }
+        .content-wrap { padding-right: 25px; padding-left: 25px; }
+        .table-controls { flex-wrap: wrap; padding-bottom: 8px; }
+        .search-box { flex-basis: 100%; width: 100%; height: 32px; margin: 0; }
+      }
+      @media (max-width: 760px) {
+        .sidebar { position: static; width: auto; height: auto; flex-direction: row; align-items: center; gap: 10px; padding: 10px 16px; border-right: 0; border-bottom: 1px solid var(--line); }
+        .brand { margin: 0; }
+        .brand > span:last-child, .workspace-copy, .workspace-switcher > svg, .sidebar .nav-label, .sidebar-bottom { display: none; }
+        .workspace-switcher { margin-left: auto; padding: 4px; border: 0; }
+        .workspace-avatar { width: 31px; height: 31px; }
+        .sidebar nav { display: flex; gap: 2px; }
+        .nav-item { min-height: 35px; gap: 7px; padding: 0 9px; }
+        .nav-item span, .nav-item .nav-count { display: none; }
+        .main-content { margin-left: 0; }
+        .topbar { height: 51px; padding: 0 17px; }
+        .content-wrap { padding: 25px 17px 20px; }
+        .stats-grid { gap: 8px; }
+        .stat-card { min-height: 108px; padding: 12px; }
+        .stat-change { display: none; }
+        .jobs-card-header, .table-controls { padding-right: 13px; padding-left: 13px; }
+        .status-tabs { gap: 12px; }
+        .status-tab { font-size: 9px; }
+        th:first-child, td:first-child { padding-left: 13px; }
+        .table-footer { padding-right: 12px; padding-left: 13px; }
+      }
+      @media (max-width: 500px) {
+        .page-heading { align-items: flex-start; }
+        .page-heading p { max-width: 250px; line-height: 1.5; }
+        .primary-button { width: 38px; height: 38px; overflow: hidden; padding: 0; font-size: 0; }
+        .primary-button svg { flex: 0 0 auto; }
+        .stats-grid { grid-template-columns: 1fr; }
+        .stat-card { min-height: 88px; }
+        .stat-value { margin-top: 3px; font-size: 22px; }
+        .stat-foot { margin-top: 1px; }
+        .table-controls { gap: 9px; }
+        .status-tabs { width: 100%; justify-content: space-between; gap: 4px; }
+        .status-tab { gap: 4px; }
+        .table-footer { align-items: flex-start; flex-direction: column; padding-top: 11px; padding-bottom: 11px; }
+        .pagination { align-self: flex-end; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#" aria-label="Applyly home">
+          <span class="brand-mark">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18m-11 0v2h4v-2" /></svg>
+          </span>
+          <span>applyly</span>
+        </a>
+        <div class="workspace-switcher">
+          <div class="workspace-avatar">S</div>
+          <div class="workspace-copy"><strong>Studio North</strong><span>Workspace</span></div>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 10 5 5 5-5" /></svg>
+        </div>
+        <p class="nav-label">WORKSPACE</p>
+        <nav aria-label="Main navigation">
+          <a class="nav-item" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /></svg><span>Overview</span></a>
+          <a class="nav-item selected" href="#" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18m-11 0v2h4v-2" /></svg><span>Jobs</span><span class="nav-count">12</span></a>
+          <a class="nav-item" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m6-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm7-7.8a4 4 0 0 1 0 7.6M20 15a4 4 0 0 1 2 3.5V21" /></svg><span>Candidates</span></a>
+          <a class="nav-item" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18m-13 4h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01" /></svg><span>Interviews</span></a>
+        </nav>
+        <p class="nav-label tools-label">PREFERENCES</p>
+        <nav aria-label="Preferences">
+          <a class="nav-item" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="m19.4 15 .1.1a1.7 1.7 0 1 1-2.4 2.4l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.4a1.7 1.7 0 1 1-3.4 0v-.2a1.7 1.7 0 0 0-2.9-1.2l-.1.1a1.7 1.7 0 1 1-2.4-2.4l.1-.1a1.7 1.7 0 0 0-1.2-2.9h-.4a1.7 1.7 0 1 1 0-3.4h.2a1.7 1.7 0 0 0 1.2-2.9l-.1-.1a1.7 1.7 0 1 1 2.4-2.4l.1.1a1.7 1.7 0 0 0 2.9-1.2v-.4a1.7 1.7 0 1 1 3.4 0v.2a1.7 1.7 0 0 0 2.9 1.2l.1-.1a1.7 1.7 0 1 1 2.4 2.4l-.1.1a1.7 1.7 0 0 0 1.2 2.9h.4a1.7 1.7 0 1 1 0 3.4h-.2a1.7 1.7 0 0 0-1.2 2.9Z" /></svg><span>Settings</span></a>
+          <a class="nav-item" href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="M9.6 9a2.5 2.5 0 0 1 4.8 1c0 1.7-2.4 2.2-2.4 4m0 3h.01" /></svg><span>Help center</span></a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="plan-card">
+            <div class="plan-icon">✳</div>
+            <strong>Make hiring easier</strong>
+            <p>Invite your team to collaborate on your open roles.</p>
+            <button type="button">Invite teammates <span>→</span></button>
+          </div>
+          <button type="button" class="profile-button">
+            <span class="profile-avatar">AM</span><span class="profile-copy"><strong>Alex Morgan</strong><small>Admin</small></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></svg>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="breadcrumbs"><span>Workspace</span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m9 18 6-6-6-6" /></svg><strong>Jobs</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button notification-button" type="button" aria-label="Notifications"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9m-8 12h4" /></svg><span></span></button>
+            <div class="topbar-avatar">AM</div>
+          </div>
+        </header>
+
+        <div class="content-wrap">
+          <div class="page-heading">
+            <div>
+              <div class="heading-overline"><span class="heading-dot"></span>HIRING WORKSPACE</div>
+              <h1>Job listings</h1>
+              <p>Manage your open roles and find the right people for your team.</p>
+            </div>
+            <button class="primary-button" type="button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7h14" /></svg>Create a job</button>
+          </div>
+
+          <section class="stats-grid" aria-label="Hiring overview">
+            <article class="stat-card"><div class="stat-top"><span>Open positions</span><span class="stat-icon green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg></span></div><div class="stat-value">08 <span class="stat-change">+2 this month</span></div><div class="stat-foot">Across 4 departments</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Total applicants</span><span class="stat-icon peach"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m6-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg></span></div><div class="stat-value">213 <span class="stat-change">+18.4%</span></div><div class="stat-foot">Compared to last month</div></article>
+            <article class="stat-card"><div class="stat-top"><span>Interviews this week</span><span class="stat-icon lilac"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg></span></div><div class="stat-value">12 <span class="stat-change">4 today</span></div><div class="stat-foot">Across all open positions</div></article>
+          </section>
+
+          <section class="jobs-card" aria-label="Job listings">
+            <div class="jobs-card-header">
+              <div><h2>All positions <span class="total-badge" id="result-count">8</span></h2><p>A snapshot of the roles your team is hiring for.</p></div>
+              <button class="filter-button" id="reset-filters" type="button"><span class="filter-glyph">≡</span>Reset filters</button>
+            </div>
+            <div class="table-controls">
+              <div class="status-tabs" role="tablist" aria-label="Filter jobs by status">
+                <button class="status-tab active" type="button" role="tab" aria-selected="true" data-status="All jobs">All jobs<span data-count="All jobs">8</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Active">Active<span data-count="Active">5</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Paused">Paused<span data-count="Paused">1</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Draft">Draft<span data-count="Draft">1</span></button>
+              </div>
+              <label class="search-box">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+                <input id="job-search" type="search" placeholder="Search positions..." aria-label="Search positions" />
+                <kbd>⌘ K</kbd>
+              </label>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th scope="col">POSITION</th><th scope="col">LOCATION</th><th scope="col">APPLICANTS</th><th scope="col">STATUS</th><th scope="col">DATE POSTED</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+                <tbody id="job-rows"></tbody>
+              </table>
+            </div>
+            <footer class="table-footer">
+              <span id="pagination-summary" aria-live="polite"></span>
+              <div class="pagination" id="pagination" aria-label="Pagination"></div>
+            </footer>
+          </section>
+          <p class="page-note">Showing a little love to better hiring. <span>✳</span></p>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const jobs = [
+        { title: 'Senior Product Designer', team: 'Design', initials: 'PD', color: 'lilac', location: 'Remote', type: 'Full-time', applicants: 48, status: 'Active', posted: 'Oct 21, 2024' },
+        { title: 'Frontend Engineer', team: 'Engineering', initials: 'FE', color: 'blue', location: 'New York, NY', type: 'Full-time', applicants: 36, status: 'Active', posted: 'Oct 19, 2024' },
+        { title: 'Content Marketing Manager', team: 'Marketing', initials: 'CM', color: 'peach', location: 'Remote', type: 'Full-time', applicants: 24, status: 'Active', posted: 'Oct 18, 2024' },
+        { title: 'Customer Success Associate', team: 'Customer success', initials: 'CS', color: 'mint', location: 'Austin, TX', type: 'Full-time', applicants: 19, status: 'Paused', posted: 'Oct 16, 2024' },
+        { title: 'Data Analyst', team: 'Analytics', initials: 'DA', color: 'yellow', location: 'New York, NY', type: 'Contract', applicants: 31, status: 'Active', posted: 'Oct 14, 2024' },
+        { title: 'People Operations Lead', team: 'People', initials: 'PO', color: 'pink', location: 'Remote', type: 'Full-time', applicants: 12, status: 'Draft', posted: 'Oct 12, 2024' },
+        { title: 'Backend Engineer', team: 'Engineering', initials: 'BE', color: 'blue', location: 'Austin, TX', type: 'Full-time', applicants: 27, status: 'Active', posted: 'Oct 10, 2024' },
+        { title: 'Brand Designer', team: 'Design', initials: 'BD', color: 'lilac', location: 'Remote', type: 'Part-time', applicants: 16, status: 'Closed', posted: 'Oct 08, 2024' },
+      ]
+
+      const pageSize = 6
+      let activeStatus = 'All jobs'
+      let currentPage = 1
+      const searchInput = document.querySelector('#job-search')
+      const rowsContainer = document.querySelector('#job-rows')
+      const pagination = document.querySelector('#pagination')
+
+      function filteredJobs() {
+        const query = searchInput.value.trim().toLowerCase()
+        return jobs.filter((job) => {
+          const matchesQuery = `${job.title} ${job.team} ${job.location}`.toLowerCase().includes(query)
+          return matchesQuery && (activeStatus === 'All jobs' || job.status === activeStatus)
+        })
+      }
+
+      function renderJobs() {
+        const results = filteredJobs()
+        const pageCount = Math.max(1, Math.ceil(results.length / pageSize))
+        currentPage = Math.min(currentPage, pageCount)
+        const firstIndex = (currentPage - 1) * pageSize
+        const visibleJobs = results.slice(firstIndex, firstIndex + pageSize)
+
+        document.querySelector('#result-count').textContent = results.length
+        rowsContainer.innerHTML = visibleJobs.length
+          ? visibleJobs.map((job) => `
+            <tr>
+              <td><div class="position-cell"><span class="team-icon ${job.color}">${job.initials}</span><span class="position-copy"><strong>${job.title}</strong><small>${job.team}<i></i>${job.type}</small></span></div></td>
+              <td><span class="location-cell"><span class="location-pin">⌖</span>${job.location}</span></td>
+              <td><span class="applicant-count">${job.applicants}</span><span class="applicant-label"> applicants</span></td>
+              <td><span class="status-pill ${job.status.toLowerCase()}"><i></i>${job.status}</span></td>
+              <td class="date-cell">${job.posted}</td>
+              <td><button class="row-action" type="button" aria-label="More actions for ${job.title}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></svg></button></td>
+            </tr>`).join('')
+          : '<tr><td colspan="6" class="empty-state"><span>No matching positions</span><small>Try a different search or status filter.</small></td></tr>'
+
+        const shownStart = results.length ? firstIndex + 1 : 0
+        const shownEnd = Math.min(firstIndex + pageSize, results.length)
+        document.querySelector('#pagination-summary').innerHTML = `Showing <strong>${shownStart}–${shownEnd}</strong> of <strong>${results.length}</strong> positions`
+        pagination.innerHTML = `
+          <button class="page-button" type="button" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+          ${Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => `<button class="page-number ${page === currentPage ? 'current' : ''}" type="button" data-page="${page}" aria-label="Page ${page}" ${page === currentPage ? 'aria-current="page"' : ''}>${page}</button>`).join('')}
+          <button class="page-button" type="button" data-page="${currentPage + 1}" ${currentPage === pageCount ? 'disabled' : ''}>Next</button>`
+      }
+
+      document.querySelectorAll('.status-tab').forEach((tab) => {
+        tab.addEventListener('click', () => {
+          activeStatus = tab.dataset.status
+          currentPage = 1
+          document.querySelectorAll('.status-tab').forEach((item) => {
+            const selected = item === tab
+            item.classList.toggle('active', selected)
+            item.setAttribute('aria-selected', String(selected))
+          })
+          renderJobs()
+        })
+      })
+
+      searchInput.addEventListener('input', () => {
+        currentPage = 1
+        renderJobs()
+      })
+      pagination.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-page]')
+        if (!button || button.disabled) return
+        currentPage = Number(button.dataset.page)
+        renderJobs()
+      })
+      document.querySelector('#reset-filters').addEventListener('click', () => {
+        searchInput.value = ''
+        currentPage = 1
+        activeStatus = 'All jobs'
+        document.querySelectorAll('.status-tab').forEach((tab) => {
+          const selected = tab.dataset.status === activeStatus
+          tab.classList.toggle('active', selected)
+          tab.setAttribute('aria-selected', String(selected))
+        })
+        renderJobs()
+      })
+      document.addEventListener('keydown', (event) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+          event.preventDefault()
+          searchInput.focus()
+        }
+      })
+
+      renderJobs()
+    </script>
+  </body>
+</html>
