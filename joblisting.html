@@ -74,17 +74,6 @@
       .page-heading p { margin: 8px 0 0; color: #87918c; font-size: 12px; }
       .primary-button { display: flex; height: 39px; flex: 0 0 auto; align-items: center; justify-content: center; gap: 8px; padding: 0 14px; border: 0; border-radius: 8px; color: #fff; background: var(--green); font-size: 11px; font-weight: 650; box-shadow: 0 3px 7px #22594b20; }
       .primary-button:hover { background: var(--green-dark); }
-      .stats-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-bottom: 22px; }
-      .stat-card { min-height: 118px; padding: 16px 18px 13px; border: 1px solid var(--line); border-radius: 10px; background: #fff; }
-      .stat-top { display: flex; align-items: center; justify-content: space-between; color: #79857e; font-size: 10px; font-weight: 550; }
-      .stat-icon { display: grid; width: 29px; height: 29px; place-items: center; border-radius: 8px; }
-      .stat-icon.green { color: #35705e; background: #e8f2ec; }
-      .stat-icon.peach { color: #b76a4e; background: #f9eee8; }
-      .stat-icon.lilac { color: #7664a0; background: #f0edf8; }
-      .stat-value { display: flex; align-items: baseline; gap: 10px; margin-top: 7px; color: #283831; font-size: 25px; font-weight: 700; letter-spacing: -.8px; }
-      .stat-change { color: #40826a; font-size: 9px; font-weight: 650; letter-spacing: 0; }
-      .stat-foot { margin-top: 4px; color: #a0a8a3; font-size: 9px; }
-
       .jobs-card { overflow: hidden; border: 1px solid var(--line); border-radius: 11px; background: #fff; }
       .jobs-card-header { display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 18px 20px 16px; }
       .jobs-card-header h2 { display: flex; align-items: center; gap: 8px; margin: 0; color: #2a3932; font-size: 13px; font-weight: 700; }
@@ -100,43 +89,29 @@
       .status-tab.active { color: var(--green); font-weight: 700; }
       .status-tab.active::after { position: absolute; right: 0; bottom: -1px; left: 0; height: 2px; background: var(--green); content: ""; }
       .status-tab.active > span { color: var(--green); background: #e8f2ec; }
-      .search-box { display: flex; width: 205px; flex: 0 1 205px; align-items: center; gap: 7px; margin: 8px 0; padding: 0 8px; border: 1px solid #e9ede9; border-radius: 7px; color: #9ba49e; }
+      .search-box { display: flex; width: min(330px, 42%); flex: 0 1 330px; align-items: center; gap: 9px; margin: 7px 0; padding: 0 10px; border: 1px solid #e1e8e2; border-radius: 7px; color: #87948c; background: #fff; }
       .search-box:focus-within { border-color: #8eb2a1; box-shadow: 0 0 0 2px #22594b12; }
-      .search-box input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 9px; }
+      .search-box input { width: 100%; min-width: 0; padding: 0; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 10px; }
       .search-box input::placeholder { color: #a1aaa5; }
       .search-box kbd { flex: 0 0 auto; padding: 3px 4px; border: 1px solid #edf0ed; border-radius: 4px; color: #a0a8a2; background: #f9faf9; font-family: inherit; font-size: 8px; }
       .table-scroll { overflow-x: auto; }
-      table { width: 100%; border-collapse: collapse; text-align: left; }
+      table { width: 100%; min-width: 850px; border-collapse: collapse; text-align: left; }
       thead { background: #fbfcfb; }
-      th { height: 37px; padding: 0 12px; color: #9ba49e; font-size: 8px; font-weight: 700; letter-spacing: .65px; white-space: nowrap; }
+      th { height: 39px; padding: 0 12px; color: #89958e; font-size: 8px; font-weight: 700; letter-spacing: .65px; white-space: nowrap; }
       th:first-child, td:first-child { padding-left: 20px; }
       th:last-child, td:last-child { padding-right: 17px; }
-      td { height: 64px; padding: 8px 12px; border-top: 1px solid #f0f2ef; color: #66736c; font-size: 10px; white-space: nowrap; }
-      .position-cell { display: flex; min-width: 205px; align-items: center; gap: 10px; }
-      .team-icon { display: grid; width: 34px; height: 34px; flex: 0 0 auto; place-items: center; border-radius: 9px; font-size: 9px; font-weight: 750; }
-      .team-icon.lilac { color: #695a97; background: #f0edf8; }
-      .team-icon.blue { color: #4e7097; background: #eaf1f8; }
-      .team-icon.peach { color: #ad684e; background: #f9eee8; }
-      .team-icon.mint { color: #3b7964; background: #e9f3ed; }
-      .team-icon.yellow { color: #92743e; background: #f7f1e2; }
-      .team-icon.pink { color: #a05d79; background: #f7edf1; }
-      .position-copy { display: flex; flex-direction: column; gap: 5px; }
-      .position-copy strong { color: #35443d; font-size: 10px; font-weight: 650; }
-      .position-copy small { display: flex; align-items: center; gap: 6px; color: #99a19c; font-size: 9px; }
-      .position-copy small i { width: 3px; height: 3px; border-radius: 50%; background: #b2bab5; }
-      .location-cell { display: flex; align-items: center; gap: 6px; }
-      .location-pin { color: #a2aca5; font-size: 15px; }
-      .applicant-count { color: #46544d; font-weight: 650; }
-      .applicant-label { color: #a0a8a3; font-size: 9px; }
+      td { height: 53px; padding: 8px 12px; border-top: 1px solid #f0f2ef; color: #66736c; font-size: 10px; white-space: nowrap; }
+      tbody tr:hover { background: #fafcfb; }
+      .job-id { color: #718078; font-family: "Consolas", "Courier New", monospace; font-size: 9px; }
+      .job-title { color: #35443d; font-weight: 650; }
+      td:nth-child(3), td:nth-child(4) { color: #76827b; }
       .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 20px; font-size: 9px; font-weight: 600; }
       .status-pill i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
       .status-pill.active { color: #3f8068; background: #eaf4ee; }
       .status-pill.paused { color: #9b7b38; background: #f8f3e5; }
       .status-pill.draft { color: #79848d; background: #f0f2f3; }
       .status-pill.closed { color: #9b6861; background: #f7eeec; }
-      .date-cell { color: #87928b; font-size: 9px; }
-      .row-action { display: grid; width: 28px; height: 28px; place-items: center; border: 0; border-radius: 6px; color: #939d96; background: transparent; }
-      .row-action:hover { color: var(--green); background: #f2f6f3; }
+      .date-cell { color: #6f7d75; font-variant-numeric: tabular-nums; }
       .empty-state { height: 120px; text-align: center; }
       .empty-state span, .empty-state small { display: block; }
       .empty-state span { margin-bottom: 5px; color: #48574f; font-weight: 650; }
@@ -176,9 +151,6 @@
         .main-content { margin-left: 0; }
         .topbar { height: 51px; padding: 0 17px; }
         .content-wrap { padding: 25px 17px 20px; }
-        .stats-grid { gap: 8px; }
-        .stat-card { min-height: 108px; padding: 12px; }
-        .stat-change { display: none; }
         .jobs-card-header, .table-controls { padding-right: 13px; padding-left: 13px; }
         .status-tabs { gap: 12px; }
         .status-tab { font-size: 9px; }
@@ -190,10 +162,6 @@
         .page-heading p { max-width: 250px; line-height: 1.5; }
         .primary-button { width: 38px; height: 38px; overflow: hidden; padding: 0; font-size: 0; }
         .primary-button svg { flex: 0 0 auto; }
-        .stats-grid { grid-template-columns: 1fr; }
-        .stat-card { min-height: 88px; }
-        .stat-value { margin-top: 3px; font-size: 22px; }
-        .stat-foot { margin-top: 1px; }
         .table-controls { gap: 9px; }
         .status-tabs { width: 100%; justify-content: space-between; gap: 4px; }
         .status-tab { gap: 4px; }
@@ -256,38 +224,33 @@
             <div>
               <div class="heading-overline"><span class="heading-dot"></span>HIRING WORKSPACE</div>
               <h1>Job listings</h1>
-              <p>Manage your open roles and find the right people for your team.</p>
+              <p>Search and review mock job records by ID, title, location, status, and dates.</p>
             </div>
             <button class="primary-button" type="button"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14m-7-7h14" /></svg>Create a job</button>
           </div>
 
-          <section class="stats-grid" aria-label="Hiring overview">
-            <article class="stat-card"><div class="stat-top"><span>Open positions</span><span class="stat-icon green"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="7" width="18" height="14" rx="2" /><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg></span></div><div class="stat-value">08 <span class="stat-change">+2 this month</span></div><div class="stat-foot">Across 4 departments</div></article>
-            <article class="stat-card"><div class="stat-top"><span>Total applicants</span><span class="stat-icon peach"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2m6-10a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg></span></div><div class="stat-value">213 <span class="stat-change">+18.4%</span></div><div class="stat-foot">Compared to last month</div></article>
-            <article class="stat-card"><div class="stat-top"><span>Interviews this week</span><span class="stat-icon lilac"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /></svg></span></div><div class="stat-value">12 <span class="stat-change">4 today</span></div><div class="stat-foot">Across all open positions</div></article>
-          </section>
-
           <section class="jobs-card" aria-label="Job listings">
             <div class="jobs-card-header">
-              <div><h2>All positions <span class="total-badge" id="result-count">8</span></h2><p>A snapshot of the roles your team is hiring for.</p></div>
+              <div><h2>Job records <span class="total-badge" id="result-count">12 records</span></h2><p>Mock job data for the Studio North workspace.</p></div>
               <button class="filter-button" id="reset-filters" type="button"><span class="filter-glyph">≡</span>Reset filters</button>
             </div>
             <div class="table-controls">
               <div class="status-tabs" role="tablist" aria-label="Filter jobs by status">
-                <button class="status-tab active" type="button" role="tab" aria-selected="true" data-status="All jobs">All jobs<span data-count="All jobs">8</span></button>
-                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Active">Active<span data-count="Active">5</span></button>
-                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Paused">Paused<span data-count="Paused">1</span></button>
-                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Draft">Draft<span data-count="Draft">1</span></button>
+                <button class="status-tab active" type="button" role="tab" aria-selected="true" data-status="All">All<span data-count="All">12</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Active">Active<span data-count="Active">0</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Paused">Paused<span data-count="Paused">0</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Draft">Draft<span data-count="Draft">0</span></button>
+                <button class="status-tab" type="button" role="tab" aria-selected="false" data-status="Closed">Closed<span data-count="Closed">0</span></button>
               </div>
               <label class="search-box">
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
-                <input id="job-search" type="search" placeholder="Search positions..." aria-label="Search positions" />
+                <input id="job-search" type="search" placeholder="Search by ID, title, location, status..." aria-label="Search mock jobs by ID, title, location, department, status, or date" />
                 <kbd>⌘ K</kbd>
               </label>
             </div>
             <div class="table-scroll">
               <table>
-                <thead><tr><th scope="col">POSITION</th><th scope="col">LOCATION</th><th scope="col">APPLICANTS</th><th scope="col">STATUS</th><th scope="col">DATE POSTED</th><th scope="col"><span class="sr-only">Actions</span></th></tr></thead>
+                <thead><tr><th scope="col">JOB ID</th><th scope="col">JOB TITLE</th><th scope="col">LOCATION</th><th scope="col">DEPARTMENT</th><th scope="col">STATUS</th><th scope="col">DATE POSTED</th><th scope="col">CLOSING DATE</th></tr></thead>
                 <tbody id="job-rows"></tbody>
               </table>
             </div>
@@ -303,18 +266,23 @@
 
     <script>
       const jobs = [
-        { title: 'Senior Product Designer', team: 'Design', initials: 'PD', color: 'lilac', location: 'Remote', type: 'Full-time', applicants: 48, status: 'Active', posted: 'Oct 21, 2024' },
-        { title: 'Frontend Engineer', team: 'Engineering', initials: 'FE', color: 'blue', location: 'New York, NY', type: 'Full-time', applicants: 36, status: 'Active', posted: 'Oct 19, 2024' },
-        { title: 'Content Marketing Manager', team: 'Marketing', initials: 'CM', color: 'peach', location: 'Remote', type: 'Full-time', applicants: 24, status: 'Active', posted: 'Oct 18, 2024' },
-        { title: 'Customer Success Associate', team: 'Customer success', initials: 'CS', color: 'mint', location: 'Austin, TX', type: 'Full-time', applicants: 19, status: 'Paused', posted: 'Oct 16, 2024' },
-        { title: 'Data Analyst', team: 'Analytics', initials: 'DA', color: 'yellow', location: 'New York, NY', type: 'Contract', applicants: 31, status: 'Active', posted: 'Oct 14, 2024' },
-        { title: 'People Operations Lead', team: 'People', initials: 'PO', color: 'pink', location: 'Remote', type: 'Full-time', applicants: 12, status: 'Draft', posted: 'Oct 12, 2024' },
-        { title: 'Backend Engineer', team: 'Engineering', initials: 'BE', color: 'blue', location: 'Austin, TX', type: 'Full-time', applicants: 27, status: 'Active', posted: 'Oct 10, 2024' },
-        { title: 'Brand Designer', team: 'Design', initials: 'BD', color: 'lilac', location: 'Remote', type: 'Part-time', applicants: 16, status: 'Closed', posted: 'Oct 08, 2024' },
+        { id: 'JOB-2026-001', title: 'Senior Product Designer', department: 'Design', location: 'Remote', status: 'Active', posted: 'Oct 02, 2026', closes: 'Nov 01, 2026' },
+        { id: 'JOB-2026-002', title: 'Frontend Engineer', department: 'Engineering', location: 'New York, NY', status: 'Active', posted: 'Oct 01, 2026', closes: 'Oct 31, 2026' },
+        { id: 'JOB-2026-003', title: 'Content Marketing Manager', department: 'Marketing', location: 'Remote', status: 'Active', posted: 'Sep 29, 2026', closes: 'Oct 29, 2026' },
+        { id: 'JOB-2026-004', title: 'Customer Success Associate', department: 'Customer Success', location: 'Austin, TX', status: 'Paused', posted: 'Sep 26, 2026', closes: 'Oct 26, 2026' },
+        { id: 'JOB-2026-005', title: 'Data Analyst', department: 'Analytics', location: 'New York, NY', status: 'Active', posted: 'Sep 24, 2026', closes: 'Oct 24, 2026' },
+        { id: 'JOB-2026-006', title: 'People Operations Lead', department: 'People', location: 'Remote', status: 'Draft', posted: 'Sep 22, 2026', closes: 'Nov 05, 2026' },
+        { id: 'JOB-2026-007', title: 'Backend Engineer', department: 'Engineering', location: 'Austin, TX', status: 'Active', posted: 'Sep 20, 2026', closes: 'Oct 20, 2026' },
+        { id: 'JOB-2026-008', title: 'Brand Designer', department: 'Design', location: 'Remote', status: 'Closed', posted: 'Aug 18, 2026', closes: 'Sep 17, 2026' },
+        { id: 'JOB-2026-009', title: 'Finance Manager', department: 'Finance', location: 'Chicago, IL', status: 'Active', posted: 'Sep 17, 2026', closes: 'Oct 17, 2026' },
+        { id: 'JOB-2026-010', title: 'Mobile Engineer', department: 'Engineering', location: 'Remote', status: 'Paused', posted: 'Sep 15, 2026', closes: 'Oct 15, 2026' },
+        { id: 'JOB-2026-011', title: 'Recruiting Coordinator', department: 'People', location: 'Austin, TX', status: 'Draft', posted: 'Sep 12, 2026', closes: 'Nov 10, 2026' },
+        { id: 'JOB-2026-012', title: 'Operations Specialist', department: 'Operations', location: 'Chicago, IL', status: 'Closed', posted: 'Aug 10, 2026', closes: 'Sep 09, 2026' },
       ]
 
-      const pageSize = 6
-      let activeStatus = 'All jobs'
+      const pageSize = 8
+      const statuses = ['All', 'Active', 'Paused', 'Draft', 'Closed']
+      let activeStatus = 'All'
       let currentPage = 1
       const searchInput = document.querySelector('#job-search')
       const rowsContainer = document.querySelector('#job-rows')
@@ -323,8 +291,8 @@
       function filteredJobs() {
         const query = searchInput.value.trim().toLowerCase()
         return jobs.filter((job) => {
-          const matchesQuery = `${job.title} ${job.team} ${job.location}`.toLowerCase().includes(query)
-          return matchesQuery && (activeStatus === 'All jobs' || job.status === activeStatus)
+          const matchesQuery = `${job.id} ${job.title} ${job.department} ${job.location} ${job.status} ${job.posted} ${job.closes}`.toLowerCase().includes(query)
+          return matchesQuery && (activeStatus === 'All' || job.status === activeStatus)
         })
       }
 
@@ -335,22 +303,27 @@
         const firstIndex = (currentPage - 1) * pageSize
         const visibleJobs = results.slice(firstIndex, firstIndex + pageSize)
 
-        document.querySelector('#result-count').textContent = results.length
+        document.querySelector('#result-count').textContent = `${results.length} records`
+        statuses.forEach((status) => {
+          const count = status === 'All' ? jobs.length : jobs.filter((job) => job.status === status).length
+          document.querySelector(`[data-count="${status}"]`).textContent = count
+        })
         rowsContainer.innerHTML = visibleJobs.length
           ? visibleJobs.map((job) => `
             <tr>
-              <td><div class="position-cell"><span class="team-icon ${job.color}">${job.initials}</span><span class="position-copy"><strong>${job.title}</strong><small>${job.team}<i></i>${job.type}</small></span></div></td>
-              <td><span class="location-cell"><span class="location-pin">⌖</span>${job.location}</span></td>
-              <td><span class="applicant-count">${job.applicants}</span><span class="applicant-label"> applicants</span></td>
+              <td class="job-id">${job.id}</td>
+              <td class="job-title">${job.title}</td>
+              <td>${job.location}</td>
+              <td>${job.department}</td>
               <td><span class="status-pill ${job.status.toLowerCase()}"><i></i>${job.status}</span></td>
               <td class="date-cell">${job.posted}</td>
-              <td><button class="row-action" type="button" aria-label="More actions for ${job.title}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="5" cy="12" r="1" /><circle cx="12" cy="12" r="1" /><circle cx="19" cy="12" r="1" /></svg></button></td>
+              <td class="date-cell">${job.closes}</td>
             </tr>`).join('')
-          : '<tr><td colspan="6" class="empty-state"><span>No matching positions</span><small>Try a different search or status filter.</small></td></tr>'
+          : '<tr><td colspan="7" class="empty-state"><span>No matching job records</span><small>Try a different search or status filter.</small></td></tr>'
 
         const shownStart = results.length ? firstIndex + 1 : 0
         const shownEnd = Math.min(firstIndex + pageSize, results.length)
-        document.querySelector('#pagination-summary').innerHTML = `Showing <strong>${shownStart}–${shownEnd}</strong> of <strong>${results.length}</strong> positions`
+        document.querySelector('#pagination-summary').innerHTML = `Showing <strong>${shownStart}–${shownEnd}</strong> of <strong>${results.length}</strong> job records`
         pagination.innerHTML = `
           <button class="page-button" type="button" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
           ${Array.from({ length: pageCount }, (_, index) => index + 1).map((page) => `<button class="page-number ${page === currentPage ? 'current' : ''}" type="button" data-page="${page}" aria-label="Page ${page}" ${page === currentPage ? 'aria-current="page"' : ''}>${page}</button>`).join('')}
@@ -383,7 +356,7 @@
       document.querySelector('#reset-filters').addEventListener('click', () => {
         searchInput.value = ''
         currentPage = 1
-        activeStatus = 'All jobs'
+        activeStatus = 'All'
         document.querySelectorAll('.status-tab').forEach((tab) => {
           const selected = tab.dataset.status === activeStatus
           tab.classList.toggle('active', selected)
