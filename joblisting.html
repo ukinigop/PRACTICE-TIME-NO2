@@ -104,7 +104,11 @@
       tbody tr:hover { background: #fafcfb; }
       .job-id { color: #718078; font-family: "Consolas", "Courier New", monospace; font-size: 9px; }
       .job-title { color: #35443d; font-weight: 650; }
+      .job-row { cursor: pointer; }
       td:nth-child(3), td:nth-child(4) { color: #76827b; }
+      .job-title-button { padding: 0; border: 0; color: #35443d; background: transparent; font-size: inherit; font-weight: 650; text-align: left; }
+      .job-title-button:hover { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+      .job-title-button:focus-visible, .detail-close:focus-visible { outline: 3px solid #8eb2a1; outline-offset: 3px; }
       .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 7px; border-radius: 20px; font-size: 9px; font-weight: 600; }
       .status-pill i { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
       .status-pill.active { color: #3f8068; background: #eaf4ee; }
@@ -127,6 +131,26 @@
       .page-note { margin: 15px 0 0; color: #a3aba5; font-size: 9px; text-align: center; }
       .page-note span { margin-left: 3px; color: #d17a56; }
       .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+
+      .job-details { width: min(560px, calc(100% - 32px)); max-width: none; max-height: min(780px, calc(100% - 32px)); padding: 0; overflow: auto; border: 1px solid #e7ece7; border-radius: 14px; color: var(--ink); background: #fff; box-shadow: 0 24px 80px #14271f30; }
+      .job-details::backdrop { background: #14271f70; backdrop-filter: blur(2px); }
+      .details-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 23px 25px 19px; border-bottom: 1px solid var(--line); }
+      .details-eyebrow { margin: 0 0 9px; color: #88968e; font-size: 9px; font-weight: 700; letter-spacing: 1.1px; }
+      .details-heading { margin: 0; color: #273831; font-family: Georgia, "Times New Roman", serif; font-size: 26px; font-weight: 400; letter-spacing: -.5px; }
+      .details-id { margin: 8px 0 0; color: #77847c; font-family: "Consolas", "Courier New", monospace; font-size: 10px; }
+      .detail-close { display: grid; width: 32px; height: 32px; flex: 0 0 auto; place-items: center; border: 1px solid #e7ece7; border-radius: 8px; color: #6e7a73; background: #fff; font-size: 20px; line-height: 1; }
+      .detail-close:hover { background: #f5f8f5; }
+      .details-content { padding: 20px 25px 25px; }
+      .detail-status { margin-bottom: 19px; }
+      .details-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 20px; }
+      .detail-item { min-width: 0; }
+      .detail-item dt { margin-bottom: 6px; color: #929e96; font-size: 8px; font-weight: 700; letter-spacing: .75px; text-transform: uppercase; }
+      .detail-item dd { margin: 0; color: #405148; font-size: 12px; line-height: 1.5; }
+      .details-divider { height: 1px; margin: 21px 0; border: 0; background: var(--line); }
+      .details-section-title { margin: 0 0 8px; color: #34443c; font-size: 12px; font-weight: 700; }
+      .details-description { margin: 0; color: #758179; font-size: 11px; line-height: 1.7; }
+      .mock-notice { display: flex; align-items: flex-start; gap: 9px; margin-top: 20px; padding: 11px 12px; border: 1px solid #e8eee8; border-radius: 8px; color: #758179; background: #f8faf8; font-size: 9px; line-height: 1.5; }
+      .mock-notice strong { color: #486457; }
 
       @media (min-width: 1500px) {
         .content-wrap { padding-top: 44px; }
@@ -167,6 +191,10 @@
         .status-tab { gap: 4px; }
         .table-footer { align-items: flex-start; flex-direction: column; padding-top: 11px; padding-bottom: 11px; }
         .pagination { align-self: flex-end; }
+        .details-header { padding: 19px 18px 16px; }
+        .details-content { padding: 17px 18px 20px; }
+        .details-heading { font-size: 22px; }
+        .details-grid { gap: 14px; }
       }
     </style>
   </head>
@@ -264,6 +292,18 @@
       </main>
     </div>
 
+    <dialog class="job-details" id="job-details" aria-labelledby="details-title">
+      <div class="details-header">
+        <div>
+          <p class="details-eyebrow">MOCK JOB LISTING</p>
+          <h2 class="details-heading" id="details-title"></h2>
+          <p class="details-id" id="details-id"></p>
+        </div>
+        <button class="detail-close" id="close-details" type="button" aria-label="Close job details">×</button>
+      </div>
+      <div class="details-content" id="details-content"></div>
+    </dialog>
+
     <script>
       const jobs = [
         { id: 'JOB-2026-001', title: 'Senior Product Designer', department: 'Design', location: 'Remote', status: 'Active', posted: 'Oct 02, 2026', closes: 'Nov 01, 2026' },
@@ -287,6 +327,86 @@
       const searchInput = document.querySelector('#job-search')
       const rowsContainer = document.querySelector('#job-rows')
       const pagination = document.querySelector('#pagination')
+      const jobDetails = document.querySelector('#job-details')
+      const mockRoleDetails = {
+        Design: {
+          employmentType: 'Full-time',
+          salaryRange: '$110,000–$145,000 / year',
+          hiringManager: 'Morgan Lee',
+          description: 'Lead thoughtful product design from early research through polished, accessible experiences. Partner closely with product and engineering on a growing set of customer tools.',
+        },
+        Engineering: {
+          employmentType: 'Full-time',
+          salaryRange: '$120,000–$165,000 / year',
+          hiringManager: 'Jordan Patel',
+          description: 'Build and maintain reliable product experiences with a collaborative team. This mock listing includes opportunities to contribute to technical direction, code quality, and team practices.',
+        },
+        Marketing: {
+          employmentType: 'Full-time',
+          salaryRange: '$82,000–$108,000 / year',
+          hiringManager: 'Taylor Brooks',
+          description: 'Shape clear, useful content that helps people understand the product. Work with design, sales, and product teams to plan campaigns and measure what resonates.',
+        },
+        'Customer Success': {
+          employmentType: 'Full-time',
+          salaryRange: '$58,000–$76,000 / year',
+          hiringManager: 'Casey Rivera',
+          description: 'Help customers reach their goals through helpful onboarding, timely follow-up, and practical product guidance. Share customer feedback with the wider team.',
+        },
+        Analytics: {
+          employmentType: 'Contract',
+          salaryRange: '$72–$95 / hour',
+          hiringManager: 'Riley Chen',
+          description: 'Turn operational and product data into clear analysis. Collaborate with stakeholders to define useful metrics, answer business questions, and communicate findings.',
+        },
+        People: {
+          employmentType: 'Full-time',
+          salaryRange: '$88,000–$120,000 / year',
+          hiringManager: 'Avery Johnson',
+          description: 'Build people programs that support a welcoming, organized employee experience. Partner with team leads on practical operations, documentation, and process improvements.',
+        },
+        Finance: {
+          employmentType: 'Full-time',
+          salaryRange: '$105,000–$138,000 / year',
+          hiringManager: 'Quinn Davis',
+          description: 'Own planning and reporting workflows that help teams make informed decisions. Partner with leadership to improve forecasting, financial visibility, and operating rhythms.',
+        },
+        Operations: {
+          employmentType: 'Full-time',
+          salaryRange: '$62,000–$84,000 / year',
+          hiringManager: 'Sam Carter',
+          description: 'Keep day-to-day operations running smoothly by coordinating processes, maintaining clear records, and finding simple ways to make cross-team work more efficient.',
+        },
+      }
+
+      function openJobDetails(job) {
+        const roleDetails = mockRoleDetails[job.department] || {
+          employmentType: 'Full-time',
+          salaryRange: 'Not specified',
+          hiringManager: 'Studio North Hiring Team',
+          description: 'This is sample job description content for the mock listing. The role will collaborate with the Studio North team to support shared goals and day-to-day work.',
+        }
+
+        document.querySelector('#details-title').textContent = job.title
+        document.querySelector('#details-id').textContent = job.id
+        document.querySelector('#details-content').innerHTML = `
+          <div class="detail-status"><span class="status-pill ${job.status.toLowerCase()}"><i></i>${job.status}</span></div>
+          <dl class="details-grid">
+            <div class="detail-item"><dt>Location</dt><dd>${job.location}</dd></div>
+            <div class="detail-item"><dt>Department</dt><dd>${job.department}</dd></div>
+            <div class="detail-item"><dt>Employment type</dt><dd>${roleDetails.employmentType}</dd></div>
+            <div class="detail-item"><dt>Salary range</dt><dd>${roleDetails.salaryRange}</dd></div>
+            <div class="detail-item"><dt>Date posted</dt><dd>${job.posted}</dd></div>
+            <div class="detail-item"><dt>Closing date</dt><dd>${job.closes}</dd></div>
+            <div class="detail-item"><dt>Hiring manager</dt><dd>${roleDetails.hiringManager}</dd></div>
+          </dl>
+          <hr class="details-divider">
+          <h3 class="details-section-title">About this role</h3>
+          <p class="details-description">${roleDetails.description}</p>
+          <div class="mock-notice"><span aria-hidden="true">ⓘ</span><span><strong>Mock data only.</strong> This sample listing is for preview purposes and can be replaced with database data later.</span></div>`
+        jobDetails.showModal()
+        document.querySelector('#close-details').focus()
+      }
 
       function filteredJobs() {
         const query = searchInput.value.trim().toLowerCase()
@@ -310,9 +430,9 @@
         })
         rowsContainer.innerHTML = visibleJobs.length
           ? visibleJobs.map((job) => `
-            <tr>
+            <tr class="job-row" data-job-id="${job.id}">
               <td class="job-id">${job.id}</td>
-              <td class="job-title">${job.title}</td>
+              <td class="job-title"><button class="job-title-button" type="button" data-job-id="${job.id}" aria-haspopup="dialog">${job.title}</button></td>
               <td>${job.location}</td>
               <td>${job.department}</td>
               <td><span class="status-pill ${job.status.toLowerCase()}"><i></i>${job.status}</span></td>
@@ -347,6 +467,16 @@
         currentPage = 1
         renderJobs()
       })
+      rowsContainer.addEventListener('click', (event) => {
+        const row = event.target.closest('tr[data-job-id]')
+        if (!row) return
+        const job = jobs.find((item) => item.id === row.dataset.jobId)
+        if (job) openJobDetails(job)
+      })
+      document.querySelector('#close-details').addEventListener('click', () => jobDetails.close())
+      jobDetails.addEventListener('click', (event) => {
+        if (event.target === jobDetails) jobDetails.close()
+      })
       pagination.addEventListener('click', (event) => {
         const button = event.target.closest('button[data-page]')
         if (!button || button.disabled) return
@@ -365,6 +495,10 @@
         renderJobs()
       })
       document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && jobDetails.open) {
+          jobDetails.close()
+          return
+        }
         if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
           event.preventDefault()
           searchInput.focus()
