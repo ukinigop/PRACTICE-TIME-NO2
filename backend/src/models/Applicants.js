@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 const applicantSchema = new mongoose.Schema(
@@ -30,5 +31,17 @@ const applicantSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+applicantSchema.pre("save", async function hashPassword() {
+  if (!this.isModified("password")) {
+    return;
+  }
+
+  this.password = await bcrypt.hash(this.password, 12);
+});
+
+applicantSchema.methods.comparePassword = function comparePassword(candidate) {
+  return bcrypt.compare(candidate, this.password);
+};
 
 module.exports = mongoose.model("Applicant", applicantSchema);

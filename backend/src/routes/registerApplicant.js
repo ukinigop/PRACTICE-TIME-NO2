@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const express = require("express");
 const Applicant = require("../models/Applicants");
 
@@ -15,7 +14,7 @@ router.post("/", async (req, res, next) => {
     const applicant = await Applicant.create({
       username,
       email,
-      password: await bcrypt.hash(password, 12),
+      password,
       firstName,
       lastName,
       phone,

@@ -1,4 +1,3 @@
-const bcrypt = require("bcrypt");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const Applicant = require("../models/Applicants");
@@ -19,7 +18,7 @@ router.post("/", async (req, res, next) => {
       $or: [{ email: identifier.toLowerCase() }, { username: identifier }],
     }).select("+password");
 
-    if (!applicant || !(await bcrypt.compare(password, applicant.password))) {
+    if (!applicant || !(await applicant.comparePassword(password))) {
       return res.status(401).json({ message: "Invalid username/email or password" });
     }
 
